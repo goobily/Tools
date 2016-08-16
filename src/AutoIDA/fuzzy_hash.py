@@ -11,12 +11,25 @@ class FuzzyHash(object):
         self.fuzzy_hash_buf = self.fuzzy.fuzzy_hash_buf
         self.fuzzy_hash_buf.restype = ctypes.c_int
         self.fuzzy_hash_buf.argtypes = [ctypes.c_char_p, ctypes.c_uint, ctypes.c_void_p]
+        
+        self.fuzzy_hash_filename = self.fuzzy.fuzzy_hash_filename
+        self.fuzzy_hash_filename.restype = ctypes.c_int
+        self.fuzzy_hash_filename.argtypes = [ctypes.c_char_p, ctypes.c_void_p]
+
 
     def hash_str(self, s):
         hs = ctypes.create_string_buffer(148)
-        err = self.fuzzy_hash_buf(s, ctypes.sizeof(hs), hs)
+        err = self.fuzzy_hash_buf(s, len(s), hs)
         if err:
             raise RuntimeError("Cannot hash string. Error: " + str(err))
+            
+        return hs.value
+    
+    def hash_file(self, f):
+        hs = ctypes.create_string_buffer(148)
+        err = self.fuzzy_hash_filename(f, hs)
+        if err:
+            raise RuntimeError("Cannot hash file. Error: " + str(err))
             
         return hs.value
         

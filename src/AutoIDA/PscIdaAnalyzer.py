@@ -130,7 +130,7 @@ class IdaResultHasher(object):
                 #print "FunctionName: ", functionName
                 #print "Opcode Series: ", opcodeSeries
                 hash_OpocdeSeries = self.hasher.hash_str(opcodeSeries)
-                hash_item = dict(FunctionName =functionName, HashValue=hash_OpocdeSeries, SourceString=opcodeSeries)
+                hash_item = dict(Function =functionName, Opcode=opcodeSeries, Hash=hash_OpocdeSeries)
                 
                 data.append(hash_item)
 
