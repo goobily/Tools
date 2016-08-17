@@ -89,7 +89,7 @@ class HashMacher(object):
                 return True
         return False
         
-    def analyze2HashResultFiles(self, lFile, rFile):
+    def analyzePairHashResultFiles(self, lFile, rFile):
         hash_MatchData = []
         if lFile=="" or rFile=="":
             print "Hash files to analyze is empty!"
@@ -142,7 +142,7 @@ class HashMacher(object):
                         hash_MatchData.append(dict(Opcodes=item_opcodes, Hashes=item_hashes)) 
         return hash_MatchData
 
-    def analyzeAll(self):
+    def analyzeAllPair(self):
         if len(self.sourceFiles) < 2:
             print "Files to do Hash Match must >= 2 !"
             return
@@ -151,7 +151,7 @@ class HashMacher(object):
         for item in FileCombinations:
             #if isEqualFile(item[0], item[1]): # ignore the same files
             #    continue
-            result_analyze2Files = self.analyze2HashResultFiles(item[0], item[1])
+            result_analyze2Files = self.analyzePairHashResultFiles(item[0], item[1])
             if len(result_analyze2Files)>0:
                 self.mergeMatchResult(result_analyze2Files)
     
@@ -215,7 +215,7 @@ class HashMacher(object):
         with open(self.resultFile , 'w+') as f:
             json.dump(json_HashMatchData, f)   
             
-    def mergeMatch(self, data_set=list()):
+    def mergePairMatchResult(self, data_set=list()):
         print "[Merge] Data Set Size = [%d]" % len(data_set)
         if len(data_set) == 0:
             print "Data set empty, nothing to merge!"
@@ -261,8 +261,8 @@ class HashMacher(object):
                 for item_m in merge_pair:
                     item_m_opcodes = item_m.get("Opcodes", list())
                     item_m_hashes = item_m.get("Hashes", list())
-                    # hash compare score > 0 , we just think they are similar
-                    if self.hashCompareScore(item_r_hashes[0], item_m_hashes[0]) > 0: 
+                    # hash compare score > SIMILAR_SCORE , we just think they are similar
+                    if self.hashCompareScore(item_r_hashes[0], item_m_hashes[0]) > SIMILAR_SCORE: 
                         match_flag = True
                         item_r_opcodes += item_m_opcodes
                         item_r_opcodes = list(set(item_r_opcodes))
@@ -279,17 +279,17 @@ class HashMacher(object):
             item_opcodes = list(set(item_opcodes))
             item_hashes = item.get("Hashes", list())
             item_hashes = list(set(item_hashes))
-            remove_duplicate_result.append(item)
+            remove_duplicate_result.append(dict(Opcodes=item_opcodes, Hashes=item_hashes))
         merge_result = []   
         return remove_duplicate_result
     
     def startMatch(self):   
-        self.analyzeAll()
+        self.analyzeAllPair()
         """
-        hash_compare_result = self.analyzeAll()
+        hash_compare_result = self.analyzeAllPair()
         if hash_compare_result == None:
             return  
-        hash_match_result = self.mergeMatch(hash_compare_result)
+        hash_match_result = self.mergePairMatchResult(hash_compare_result)
         if hash_match_result == None:
             return
         """    
