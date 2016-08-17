@@ -20,8 +20,7 @@ class HashMacher(object):
         self.setResultFile()
         self.addSourceFiles(sourceFilesPath)
         self.hasher = fuzzy_hash.FuzzyHash()
-        self.same_files = set()
-        self.file_hash = set()
+        self.file_hashes = set()
         self.match_result = list()
     def setResultFolder(self, dir=""):
         if dir != "":
@@ -41,9 +40,6 @@ class HashMacher(object):
         with open(file_parser, 'r') as f:
             return json.load(f).get("HashMacher", list())
             
-    def getResultLeftStr(self):    
-        pass
-
     def addSourceFiles(self, sourceFilesPath=""):
         if sourceFilesPath == "":
             return
@@ -85,7 +81,7 @@ class HashMacher(object):
         return mrData
     
     def isInhashSet(self, hash_value, hash_set=list()):
-        hash_set_ = self.file_hash
+        hash_set_ = self.file_hashes
         if len(hash_set) != 0:
             hash_set_ = hash_set
         for item in hash_set_:
@@ -110,8 +106,8 @@ class HashMacher(object):
             print "Equal hash file, just return hash file."
             if self.isInhashSet(lFile_hash) or self.isInhashSet(rFile_hash):
                 return hash_MatchData
-            self.file_hash.add(lFile_hash)
-            self.file_hash.add(rFile_hash)
+            self.file_hashes.add(lFile_hash)
+            self.file_hashes.add(rFile_hash)
             return self.convertHrData2MrData(lFile)
             
         hash_MatchData = []
@@ -122,7 +118,6 @@ class HashMacher(object):
             for rElement in rData:
                 rEleHash = rElement.get("Hash")
                 rEleOpcode = rElement.get("Opcode")
-                #score = self.stringCompareScore(lEleOpocode, rEleOpcode)
                 score = self.hashCompareScore(lEleHash, rEleHash)
                 # if score > SIMILAR_SCORE, we just think they are similar
                 if score <= SIMILAR_SCORE:
@@ -137,9 +132,7 @@ class HashMacher(object):
                     item_hashes.append(lEleHash)
                     item_hashes.append(rEleHash)
                     item_hashes = list(set(item_hashes))
-                    
-                    #leftItem = dict(Function=lElement.get("Function"), Opcode=lElement.get("Opcode"), Hash=lEleHash)
-                    #rightItem = dict(Function=rElement.get("Function"), Opcode=rElement.get("Opcode"), Hash=rEleHash)
+
                     if score >= SAME_SCORE and same_score_num < SAME_SCORE_COUNT:
                         same_score_num += 1
                     # if lFile and rFile have more than SAME_SCORE_COUNT funtions score SAME_SCORE, we just think they are the same
@@ -153,7 +146,7 @@ class HashMacher(object):
         if len(self.sourceFiles) < 2:
             print "Files to do Hash Match must >= 2 !"
             return
-        self.file_hash = set()
+        self.file_hashes = set()
         FileCombinations = combinations(self.sourceFiles, 2)
         for item in FileCombinations:
             #if isEqualFile(item[0], item[1]): # ignore the same files
@@ -214,7 +207,7 @@ class HashMacher(object):
             if self.isInhashSet(file_hash):
                 print "Equal hash file already exists!"
                 continue
-            self.file_hash.add(file_hash)
+            self.file_hashes.add(file_hash)
             self.mergeMatchResult(self.convertHrData2MrData(file))
             
         self.uniqueMatchResult()
