@@ -6,8 +6,10 @@ import json
 from itertools import combinations
 from PscResultManager import *
 
-SPECIFIC_SCORE = 100
-SPECIFIC_SCORE_COUNT = 20
+SAME_SCORE = 100
+SAME_SCORE_COUNT = 20
+
+SIMILAR_SCORE = 10
 
 class HashMacher(object):
     def __init__(self, sourceFilesPath=""):
@@ -20,6 +22,7 @@ class HashMacher(object):
         self.hasher = fuzzy_hash.FuzzyHash()
         self.same_files = set()
         self.file_hash = set()
+        self.match_result = list()
     def setResultFolder(self, dir=""):
         if dir != "":
             self.resultFolder = dir
@@ -67,16 +70,26 @@ class HashMacher(object):
         rhs = self.hasher.hash_str(rstr)
         return self.hashCompareScore(lhs, rhs)
     
-    def convertHrData2MrData(self, hrData):
+    def convertHrData2MrData(self, hrFile):
         mrData = []
+        if isEmptyFile(hrFile):
+            return mrData
+        with open(hrFile, 'r') as f:
+            hrData = json.load(f).get("HashResult", list())
         for hrEle in hrData:
-            leftItem = dict(Function=hrEle.get("Function"), Opcode=hrEle.get("Opcode"), Hash=hrEle.get("Hash"))
-            mrData.append(dict(Left=leftItem, Right=leftItem, Score=100))
+            item_opcodes = []
+            item_opcodes.append(hrEle.get("Opcode"))
+            item_hashes = []
+            item_hashes.append(hrEle.get("Hash"))
+            mrData.append(dict(Opcodes=item_opcodes, Hashes=item_hashes))
         return mrData
     
-    def isInhashSet(self, hash_value, hash_set):
-        for item in hash_set:
-            if self.hashCompareScore(hash_value, item) != 0:
+    def isInhashSet(self, hash_value, hash_set=list()):
+        hash_set_ = self.file_hash
+        if len(hash_set) != 0:
+            hash_set_ = hash_set
+        for item in hash_set_:
+            if self.hashCompareScore(hash_value, item) > SIMILAR_SCORE:
                 return True
         return False
         
@@ -93,56 +106,122 @@ class HashMacher(object):
         with open(rFile, 'r') as f:
             rData = json.load(f).get("HashResult", list())
         lFile_hash, rFile_hash, file_hash_score = self.fileHashCompareScore(lFile, rFile) 
-        if file_hash_score != 0:  # file hash prefilter
+        if file_hash_score > SIMILAR_SCORE:  # file hash prefilter
             print "Equal hash file, just return hash file."
-            if self.isInhashSet(lFile_hash,self.file_hash) or self.isInhashSet(rFile_hash, self.file_hash):
+            if self.isInhashSet(lFile_hash) or self.isInhashSet(rFile_hash):
                 return hash_MatchData
             self.file_hash.add(lFile_hash)
             self.file_hash.add(rFile_hash)
-            return self.convertHrData2MrData(lData)
+            return self.convertHrData2MrData(lFile)
             
         hash_MatchData = []
-        hash_SpecMatchData = []
+        same_score_num = 0
         for lElement in lData:
             lEleHash = lElement.get("Hash")
-            #lEleOpocode = lElement.get("Opcode")
+            lEleOpocode = lElement.get("Opcode")
             for rElement in rData:
                 rEleHash = rElement.get("Hash")
-                #rEleOpcode = rElement.get("Opcode")
+                rEleOpcode = rElement.get("Opcode")
                 #score = self.stringCompareScore(lEleOpocode, rEleOpcode)
                 score = self.hashCompareScore(lEleHash, rEleHash)
-                # if score > 0, we just think they are similar
-                if score == 0:
+                # if score > SIMILAR_SCORE, we just think they are similar
+                if score <= SIMILAR_SCORE:
                     continue
                 else:
-                    leftItem = dict(Function=lElement.get("Function"), Opcode=lElement.get("Opcode"), Hash=lEleHash)
-                    rightItem = dict(Function=rElement.get("Function"), Opcode=rElement.get("Opcode"), Hash=rEleHash)
-                    if score==SPECIFIC_SCORE and len(hash_SpecMatchData) < SPECIFIC_SCORE_COUNT:
-                        hash_SpecMatchData.append(dict(Left=leftItem, Right=rightItem, Score=score))
-                    # if lFile and rFile have more than SPECIFIC_SCORE_COUNT funtions score SPECIFIC_SCORE, we just think they are the same
-                    elif score == SPECIFIC_SCORE: 
-                        hash_MatchData = []
-                        hash_MatchData = hash_SpecMatchData
-                        return self.convertHrData2MrData(lData)
+                    item_opcodes = []
+                    item_opcodes.append(lEleOpocode)
+                    item_opcodes.append(rEleOpcode)
+                    item_opcodes = list(set(item_opcodes))
+                    
+                    item_hashes = []
+                    item_hashes.append(lEleHash)
+                    item_hashes.append(rEleHash)
+                    item_hashes = list(set(item_hashes))
+                    
+                    #leftItem = dict(Function=lElement.get("Function"), Opcode=lElement.get("Opcode"), Hash=lEleHash)
+                    #rightItem = dict(Function=rElement.get("Function"), Opcode=rElement.get("Opcode"), Hash=rEleHash)
+                    if score >= SAME_SCORE and same_score_num < SAME_SCORE_COUNT:
+                        same_score_num += 1
+                    # if lFile and rFile have more than SAME_SCORE_COUNT funtions score SAME_SCORE, we just think they are the same
+                    elif same_score_num >= SAME_SCORE_COUNT: 
+                        return self.convertHrData2MrData(lFile)
                     else:
-                        hash_MatchData.append(dict(Left=leftItem, Right=rightItem, Score=score)) 
+                        hash_MatchData.append(dict(Opcodes=item_opcodes, Hashes=item_hashes)) 
         return hash_MatchData
 
     def analyzeAll(self):
         if len(self.sourceFiles) < 2:
             print "Files to do Hash Match must >= 2 !"
             return
-        hash_MatchData = list()
-        self.same_files = set()
+        self.file_hash = set()
         FileCombinations = combinations(self.sourceFiles, 2)
         for item in FileCombinations:
             #if isEqualFile(item[0], item[1]): # ignore the same files
             #    continue
             result_analyze2Files = self.analyze2HashResultFiles(item[0], item[1])
             if len(result_analyze2Files)>0:
-                hash_MatchData.append(result_analyze2Files)
-        return hash_MatchData
+                self.mergeMatchResult(result_analyze2Files)
     
+    def uniqueMatchResult(self):
+        remove_duplicate_result = []
+        for item in self.match_result:
+            item_opcodes = item.get("Opcodes", list())
+            item_opcodes = list(set(item_opcodes))
+            item_hashes = item.get("Hashes", list())
+            item_hashes = list(set(item_hashes))
+            remove_duplicate_result.append(dict(Opcodes=item_opcodes, Hashes=item_hashes))
+        self.match_result = remove_duplicate_result
+        
+    def mergeMatchResult(self, new_match_result):
+        if len(self.match_result) == 0:
+            self.match_result = new_match_result
+        else:
+            same_score_num = 0
+            for r_index in range(len(self.match_result)-1, -1, -1):
+                match_flag = False
+                item_r_opcodes = self.match_result[r_index].get("Opcodes", list())
+                item_r_hashes = self.match_result[r_index].get("Hashes", list())
+                for item_n in new_match_result:
+                    item_n_opcodes = item_n.get("Opcodes", list())
+                    item_n_hashes = item_n.get("Hashes", list())
+                    
+                    if self.hashCompareScore(item_r_hashes[0], item_n_hashes[0]) >= SAME_SCORE:
+                        same_score_num += 1
+                        if same_score_num >= SAME_SCORE_COUNT:
+                            print "Hash compare score [%d] more than [%d] times, just think they are the same." % (SAME_SCORE, SAME_SCORE_COUNT)
+                            self.uniqueMatchResult()
+                            return
+                        continue
+                    # hash compare score > 0 , we just think they are similar
+                    if self.hashCompareScore(item_r_hashes[0], item_n_hashes[0]) > SIMILAR_SCORE: 
+                        match_flag = True
+                        item_r_opcodes += item_n_opcodes
+                        item_r_hashes += item_n_hashes
+                # remove not matched item in result set to speed up the match routine        
+                if match_flag == False:
+                    self.match_result.pop(r_index)
+        self.uniqueMatchResult()
+    
+    def newStartMatch(self):
+        source_files_num = len(self.sourceFiles)
+        if source_files_num == 0:
+            print "No hash files to match!"
+            return
+        if source_files_num == 1:
+            print "Just one hash file, no need to match!"
+        for file in self.sourceFiles:
+            file_hash = self.hasher.hash_file(file)
+            if self.isInhashSet(file_hash):
+                print "Equal hash file already exists!"
+                continue
+            self.file_hash.add(file_hash)
+            self.mergeMatchResult(self.convertHrData2MrData(file))
+            
+        self.uniqueMatchResult()
+        json_HashMatchData = dict(HashMacher=self.match_result)
+        with open(self.resultFile , 'w+') as f:
+            json.dump(json_HashMatchData, f)   
+            
     def mergeMatch(self, data_set=list()):
         print "[Merge] Data Set Size = [%d]" % len(data_set)
         if len(data_set) == 0:
@@ -196,7 +275,7 @@ class HashMacher(object):
                         item_r_opcodes = list(set(item_r_opcodes))
                         item_r_hashes += item_m_hashes
                         item_r_hashes = list(set(item_r_hashes))
-                # remove not matched item in result set to speed the match routine        
+                # remove not matched item in result set to speed up the match routine        
                 if match_flag == False:
                     merge_result.pop(r_index)
             i += 1
@@ -212,13 +291,16 @@ class HashMacher(object):
         return remove_duplicate_result
     
     def startMatch(self):   
+        self.analyzeAll()
+        """
         hash_compare_result = self.analyzeAll()
         if hash_compare_result == None:
             return  
         hash_match_result = self.mergeMatch(hash_compare_result)
         if hash_match_result == None:
             return
-        json_HashMatchData = dict(HashMacher=hash_match_result)
+        """    
+        json_HashMatchData = dict(HashMacher=self.match_result)
         with open(self.resultFile , 'w+') as f:
             json.dump(json_HashMatchData, f)
         

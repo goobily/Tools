@@ -33,7 +33,7 @@ def main():
     IdaProcess(ida_analyzer, sys.argv[1], sys.argv[2], sys.argv[3])
     
     hash_matcher = HashMacher(ida_analyzer.getResultHasher().getResultFolder())
-    hash_matcher.startMatch()
+    hash_matcher.newStartMatch()
     
     
 if __name__ == '__main__':
