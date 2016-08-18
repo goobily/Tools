@@ -9,7 +9,8 @@ from PscResultManager import *
 SAME_SCORE = 100
 SAME_SCORE_COUNT = 20
 
-SIMILAR_SCORE = 10
+FUNCTION_SIMILAR_SCORE = 20
+FILE_SIMILAR_SCORE = 20
 
 class HashMacher(object):
     def __init__(self, sourceFilesPath=""):
@@ -61,6 +62,17 @@ class HashMacher(object):
     def hashCompareScore(self, lhs, rhs):
         return self.hasher.compare(lhs, rhs)
     
+    def isSimilarClosure(self, lhs_list, rhs_list, hash_score=0):
+        if len(lhs_list) == 0 or len(rhs_list) == 0:
+            return False
+        zero_score = (hash_score == 0)
+        isSimilar = False
+        if zero_score:
+            isSimilar = (self.hashCompareScore(lhs_list[0], rhs_list[0]) > hash_score)
+        else:
+            isSimilar = (self.hashCompareScore(lhs_list[0], rhs_list[0]) >= hash_score)
+        return isSimilar
+        
     def stringCompareScore(self, lstr, rstr):
         lhs = self.hasher.hash_str(lstr)
         rhs = self.hasher.hash_str(rstr)
@@ -80,12 +92,12 @@ class HashMacher(object):
             mrData.append(dict(Opcodes=item_opcodes, Hashes=item_hashes))
         return mrData
     
-    def isInhashSet(self, hash_value, hash_set=list()):
+    def isInFileHashSet(self, hash_value, hash_set=list()):
         hash_set_ = self.file_hashes
         if len(hash_set) != 0:
             hash_set_ = hash_set
         for item in hash_set_:
-            if self.hashCompareScore(hash_value, item) > SIMILAR_SCORE:
+            if self.hashCompareScore(hash_value, item) > FILE_SIMILAR_SCORE:
                 return True
         return False
         
@@ -102,9 +114,9 @@ class HashMacher(object):
         with open(rFile, 'r') as f:
             rData = json.load(f).get("HashResult", list())
         lFile_hash, rFile_hash, file_hash_score = self.fileHashCompareScore(lFile, rFile) 
-        if file_hash_score > SIMILAR_SCORE:  # file hash prefilter
+        if file_hash_score > FILE_SIMILAR_SCORE:  # file hash prefilter
             print "Equal hash file, just return hash file."
-            if self.isInhashSet(lFile_hash) or self.isInhashSet(rFile_hash):
+            if self.isInFileHashSet(lFile_hash) or self.isInFileHashSet(rFile_hash):
                 return hash_MatchData
             self.file_hashes.add(lFile_hash)
             self.file_hashes.add(rFile_hash)
@@ -119,8 +131,8 @@ class HashMacher(object):
                 rEleHash = rElement.get("Hash")
                 rEleOpcode = rElement.get("Opcode")
                 score = self.hashCompareScore(lEleHash, rEleHash)
-                # if score > SIMILAR_SCORE, we just think they are similar
-                if score <= SIMILAR_SCORE:
+                # if score > FUNCTION_SIMILAR_SCORE, we just think they are similar
+                if score <= FUNCTION_SIMILAR_SCORE:
                     continue
                 else:
                     item_opcodes = []
@@ -164,7 +176,30 @@ class HashMacher(object):
             item_hashes = list(set(item_hashes))
             remove_duplicate_result.append(dict(Opcodes=item_opcodes, Hashes=item_hashes))
         self.match_result = remove_duplicate_result
-        
+    
+    def similarMergeInMatchResult(self, match_result_data):
+        if len(match_result_data) == 0:
+            return match_result_data
+        merged_data = []
+        for item in match_result_data:
+            item_hashes = item.get("Hashes", list())
+            item_opcodes = item.get("Opcodes", list())
+            similar_found = False
+            for item_merged in merged_data:
+                item_merged_hashes = item_merged.get("Hashes", list())
+                item_merged_opcodes = item_merged.get("Opcodes", list())
+                if self.isSimilarClosure(item_hashes, item_merged_hashes, FUNCTION_SIMILAR_SCORE):
+                    similar_found = True
+                    item_merged_hashes += item_hashes
+                    #item_merged_hashes = list(set(item_merged_hashes))
+                    item_merged_opcodes += item_opcodes
+                    #item_merged_opcodes = list(set(item_merged_opcodes))
+                    item_merged = dict(Opcodes=item_merged_opcodes, Hashes=item_merged_hashes)
+                    break
+            if similar_found == False:
+                merged_data.append(item)
+        return merged_data
+    
     def mergeMatchResult(self, new_match_result):
         if len(self.match_result) == 0:
             self.match_result = new_match_result
@@ -178,22 +213,22 @@ class HashMacher(object):
                     item_n_opcodes = item_n.get("Opcodes", list())
                     item_n_hashes = item_n.get("Hashes", list())
                     
-                    if self.hashCompareScore(item_r_hashes[0], item_n_hashes[0]) >= SAME_SCORE:
+                    if self.isSimilarClosure(item_r_hashes, item_n_hashes, SAME_SCORE):
                         same_score_num += 1
                         if same_score_num >= SAME_SCORE_COUNT:
                             print "Hash compare score [%d] more than [%d] times, just think they are the same." % (SAME_SCORE, SAME_SCORE_COUNT)
-                            self.uniqueMatchResult()
+                            #self.uniqueMatchResult()
                             return
                         continue
-                    # hash compare score > 0 , we just think they are similar
-                    if self.hashCompareScore(item_r_hashes[0], item_n_hashes[0]) > SIMILAR_SCORE: 
+                    # hash compare score > FUNCTION_SIMILAR_SCORE , we just think they are similar
+                    if self.isSimilarClosure(item_r_hashes, item_n_hashes, FUNCTION_SIMILAR_SCORE): 
                         match_flag = True
                         item_r_opcodes += item_n_opcodes
                         item_r_hashes += item_n_hashes
                 # remove not matched item in result set to speed up the match routine        
                 if match_flag == False:
                     self.match_result.pop(r_index)
-        self.uniqueMatchResult()
+        #self.uniqueMatchResult()
     
     def newStartMatch(self):
         source_files_num = len(self.sourceFiles)
@@ -204,16 +239,17 @@ class HashMacher(object):
             print "Just one hash file, no need to match!"
         for file in self.sourceFiles:
             file_hash = self.hasher.hash_file(file)
-            if self.isInhashSet(file_hash):
-                print "Equal hash file already exists!"
-                continue
+            #if self.isInFileHashSet(file_hash):
+            #    print "Equal hash file already exists!"
+            #    continue
             self.file_hashes.add(file_hash)
             self.mergeMatchResult(self.convertHrData2MrData(file))
             
+        self.match_result = self.similarMergeInMatchResult(self.match_result)    
         self.uniqueMatchResult()
         json_HashMatchData = dict(HashMacher=self.match_result)
         with open(self.resultFile , 'w+') as f:
-            json.dump(json_HashMatchData, f)   
+            json.dump(json_HashMatchData, f, indent=4)   
             
     def mergePairMatchResult(self, data_set=list()):
         print "[Merge] Data Set Size = [%d]" % len(data_set)
@@ -261,8 +297,8 @@ class HashMacher(object):
                 for item_m in merge_pair:
                     item_m_opcodes = item_m.get("Opcodes", list())
                     item_m_hashes = item_m.get("Hashes", list())
-                    # hash compare score > SIMILAR_SCORE , we just think they are similar
-                    if self.hashCompareScore(item_r_hashes[0], item_m_hashes[0]) > SIMILAR_SCORE: 
+                    # hash compare score > FUNCTION_SIMILAR_SCORE , we just think they are similar
+                    if self.isSimilarClosure(item_r_hashes, item_m_hashes, FUNCTION_SIMILAR_SCORE): 
                         match_flag = True
                         item_r_opcodes += item_m_opcodes
                         item_r_opcodes = list(set(item_r_opcodes))
@@ -295,6 +331,6 @@ class HashMacher(object):
         """    
         json_HashMatchData = dict(HashMacher=self.match_result)
         with open(self.resultFile , 'w+') as f:
-            json.dump(json_HashMatchData, f)
+            json.dump(json_HashMatchData, f, indent=4)
         
         
