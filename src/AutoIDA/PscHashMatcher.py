@@ -239,9 +239,10 @@ class HashMacher(object):
             print "Just one hash file, no need to match!"
         for file in self.sourceFiles:
             file_hash = self.hasher.hash_file(file)
-            #if self.isInFileHashSet(file_hash):
-            #    print "Equal hash file already exists!"
-            #    continue
+            # file hash prefilter
+            if self.isInFileHashSet(file_hash):
+                print "Equal hash file already exists!"
+                continue
             self.file_hashes.add(file_hash)
             self.mergeMatchResult(self.convertHrData2MrData(file))
             

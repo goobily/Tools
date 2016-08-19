@@ -138,7 +138,7 @@ class IdaResultHasher(object):
         print "Result Json File: ", json_fileName 
         json_data = dict(HashResult=data)
         with open(json_fileName, 'w+') as f:
-            json.dump(json_data, f)
+            json.dump(json_data, f, indent=4)
 
 '''  
 def main():
