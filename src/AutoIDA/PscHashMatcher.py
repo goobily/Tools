@@ -1,5 +1,5 @@
 # coding: utf-8
-
+# authot: goobily
 import fuzzy_hash
 import os
 import json

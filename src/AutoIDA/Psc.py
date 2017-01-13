@@ -1,5 +1,5 @@
 # coding: utf-8
-
+# autor: goobily
 import sys
 import os
 from PscIdaAnalyzer import *
