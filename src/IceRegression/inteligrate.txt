@@ -1,0 +1,63 @@
+10.5.37.65:22 root/1111561
+  982  cd /mnt/svr218/sharewrite/share/rong/robot_rong/
+  983  pybot -A robot208.ini --test sc_applet_jar_CVE_2012_0507.__URL__ testcase/Url_RAT_Malicious.txt 
+  984  pybot -A robot208.ini --test SCBUG-380_766d2d077f5bf4e962aa4a121bff1e7b8e81b0e6f2d3817e23a997cf0944bdab testcase/SEG_2016_12.txt 
+  985  pybot -A robot16.ini --test 30.__URL__ testcase/Url_RAT_Malicious.txt 
+  986  pybot -A robot16.ini  testcase/FA_History.txt 
+  987  pybot -A robot16.ini  testcase/All_706_FA_sample.txt 
+  988  pybot -A robot16.ini  testcase/CheckRule.txt 
+  989  pybot -A robot16.ini  testcase/FA_History.txt 
+  990  pybot -A robot16.ini --test 80759D07126ECB19CB9A0D4A1AE1273DE4807DC8.58AC4F72 testcase/FA_History.txt 
+  991  pybot -A robot16.ini --test SCBUG-196_lnk_ransomware testcase/sep_rel.txt 
+  992  pybot -A robot16.ini --test ICSA_FA_6f8895a36fae67d1fe969a27f440329f testcase/SEG_2016_10.txt 
+  993  pybot -A robot16.ini -- testcase/SEG_2016_10.txt 
+  994  python send_diffrobot.py 6.0.3174678 6.0.1822
+  995  python send_diffrobot.py 6.0.3178675 6.0.1822
+  996  python send_diffrobot.py 6.0.3178675
+  997  python send_diffrobot.py 6.0.3178675 6.0.1822
+  998  python send_diffrobot.py 6.0.3178675
+  999  python send_diffrobot.py 6.0.3178675 6.0.1822
+ 1000  python rmandrundiff.py 6.0.3178675 6.0.1822
+ 1001  cd /mnt/svr218/sharewrite/share/daisy/script/special/robot
+ 1002  ls
+ 1003  l
+ 1004  ll
+ 1005  cd testcase/
+ 1006  ls
+ 1007  ll
+ 1008  vim SEG_2016_11.txt 
+ 1009  cd ..
+ 1010  ls
+ 1011  cd testcase/
+ 1012  ls
+ 1013  cat ../readme.txt 
+ 1014  ll
+ 1015  cd ..
+ 1016  ls
+ 1017  vim robot208.ini 
+ 1018  pybot -A robot208.ini testcase/ICE_regression.txt 
+ 1019  history
+[root@centos7 robot]# 
+
+log:
+\\10.5.36.218\sharewrite\share\daisy\script\special\robot
+
+scripts:
+\\10.5.36.218\sharewrite\share\daisy\script\special\robot\libs\ICE_regression.py
+
+robot.ini
+\\10.5.36.218\sharewrite\share\daisy\script\special\robot\robot208.ini
+
+testcase:
+\\10.5.36.218\sharewrite\share\daisy\script\special\robot\testcase\ICE_regression.txt
+
+
+*** Test Cases ***
+Adds Active Setup value in registry.spk
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_Folder}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Adds Active Setup value in registry.spk
+    \    ...    ${sampleset}
+    \    ${result}=    analyze_evasion    ${REPORT_Folder}    
+    \    Should Be Equal    ${result}    False 

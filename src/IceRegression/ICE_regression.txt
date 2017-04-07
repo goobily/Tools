@@ -1,0 +1,390 @@
+*** Settings ***
+Library           BuiltIn
+Library           ../libs/report_xml.py
+Library           ../libs/report_v2_xml.py
+Library           ../libs/common_module.py
+Library           ../libs/ivr_log.py
+Library           ../libs/api_log.py
+Library           ../libs/result_zip.py
+Library           ../libs/ICE_Parser.py
+Variables         ../libs/ConfigSC.py
+
+*** Variables ***
+${sampleset}      ICE_regression
+
+*** Test Cases ***
+Flirt_45309_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_45309_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_351982_http_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_351982_http_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_365173_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_365173_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_365195_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_365195_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_365205_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_365205_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_365884_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_365884_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_386210_email_payload.ex_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_386210_email_payload.ex_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_4365165.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_4365165.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_19593103.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_19593103.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_19907030.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_19907030.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_19970472.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_19970472.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_20063636.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_20063636.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_vmdwords.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_vmdwords.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+Flirt_vpcext.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Flirt_vpcext.exe_
+    \    ...    ${sampleset}
+    \    analyze_flirt    ${REPORT_PATH}
+
+ICE-1463_Evasion_Environment_11.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    ICE-1463_Evasion_Environment_11.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+ICE-1474_Evasion_Interactive_4.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    ICE-1474_Evasion_Interactive_4.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SAN-1424_Evasion_d238efd29c4ff366700f18c465bdd5955ec85c070898bb6ddee92ee4f056175b
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SAN-1424_Evasion_d238efd29c4ff366700f18c465bdd5955ec85c070898bb6ddee92ee4f056175b
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SAN-2024_Evasion_Timing_3.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SAN-2024_Evasion_Timing_3.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SAN-2027_Evasion_NtDelayExecution.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SAN-2027_Evasion_NtDelayExecution.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*FILE:A.*Bypass timing_NtDelayexecution.*
+
+SAN-2180_Evasion_c106a35191b1bd0b4812a8039a20ad09036c12a80750355565a2f77a38d8856c
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SAN-2180_Evasion_c106a35191b1bd0b4812a8039a20ad09036c12a80750355565a2f77a38d8856c
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SCBUG-159_Evasion_FileAnti_6.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-159_Evasion_FileAnti_6.exe_
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SCBUG-251_Evasion_4f0d973157ec4d1bb39165d666e72023f952a13d57c674bc5490ec5815331929
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-251_Evasion_4f0d973157ec4d1bb39165d666e72023f952a13d57c674bc5490ec5815331929
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SCBUG-301_Evasion_Process_5.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-301_Evasion_Process_5.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SCBUG-303_Evasion_File_2.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-303_Evasion_File_2.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SCBUG-304_Evasion_Hardware_2.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-304_Evasion_Hardware_2.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SCBUG-306_Evasion_Hardware_9.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-306_Evasion_Hardware_9.exe_
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*PROC:A.*C:\\\\WINDOWS\\\\Temp\\\\update.exe.*
+
+SCBUG-339_Evasion_B51741BDBA854B0F9D29DA52E7234CD682200B81
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-339_Evasion_B51741BDBA854B0F9D29DA52E7234CD682200B81
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SCBUG-401_Evasion_944A70C16B3A5B3BA567E8B642133FB516F8E839
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-401_Evasion_944A70C16B3A5B3BA567E8B642133FB516F8E839
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*process.*creates process.*
+
+SCBUG-401_Evasion_F33DB5FCA3FA4EF27792CC9C01EB6442154602B1
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-401_Evasion_F33DB5FCA3FA4EF27792CC9C01EB6442154602B1
+    \    ...    ${sampleset}
+    \    api_log_should_contain_patternkey    ${REPORT_PATH}/api.log    .*process.*creates process.*
+
+SCBUG-402_Evasion_23975E39F9F7CEB8737734C535716748940FC576
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-402_Evasion_23975E39F9F7CEB8737734C535716748940FC576
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+SCBUG-402_Evasion_C9B92FC8EAC84E2E9919585289402EDA34A8AFEF
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    SCBUG-402_Evasion_C9B92FC8EAC84E2E9919585289402EDA34A8AFEF
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+WMI_Evasion_Pafish_macro
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    WMI_Evasion_Pafish_macro
+    \    ...    ${sampleset}
+    \    analyze_evasion    ${REPORT_PATH}
+
+Stalling_2f8bf10bce9ec1639d3808a92da2ed40a884b775c127a15598bcf298c6dde651
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_2f8bf10bce9ec1639d3808a92da2ed40a884b775c127a15598bcf298c6dde651
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_6f663c02980aa746fc9e893627e555e11ed25edfdd618ed15f07dea8216160e1
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_6f663c02980aa746fc9e893627e555e11ed25edfdd618ed15f07dea8216160e1
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_44b044855b1c59c74434afd3d97cb57c36599c2e724f65ca5d225e1b1e68f4a9
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_44b044855b1c59c74434afd3d97cb57c36599c2e724f65ca5d225e1b1e68f4a9
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_93d7a8eb57413b2848141ca9c0ce770360f5eb35.df00eb8cb99b1f025b2a935f134d6d56
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_93d7a8eb57413b2848141ca9c0ce770360f5eb35.df00eb8cb99b1f025b2a935f134d6d56
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_999.exe_-0
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_999.exe_-0
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_02041dbfe6ba860ae17527df6ec482d8
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_02041dbfe6ba860ae17527df6ec482d8
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_28159fac4c5262cddb658b0a4383dd04f5bcd112117937b027fc8e23967a9084
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_28159fac4c5262cddb658b0a4383dd04f5bcd112117937b027fc8e23967a9084
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_57858ec00ba324f99886054c3deac8e728a817e6700a507781ca50f8f479b602
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_57858ec00ba324f99886054c3deac8e728a817e6700a507781ca50f8f479b602
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_861082c94552ad72f40f41a42f6d253a26eda35567d9e692ca544e53cd3ab14b
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_861082c94552ad72f40f41a42f6d253a26eda35567d9e692ca544e53cd3ab14b
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+stalling_a9a7b501ec1afd2abea108ac33e7826486623fdeb71149b67aa15263df450ab8
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    stalling_a9a7b501ec1afd2abea108ac33e7826486623fdeb71149b67aa15263df450ab8
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_f2ad4722b3585f2b34886bb64087a889315cb5b51ab88453d551ba1e7f238267
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_f2ad4722b3585f2b34886bb64087a889315cb5b51ab88453d551ba1e7f238267
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_fb9466a2050d8b2b76469b72437589bb1963a74c9e3a74802657c30df954d72a
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_fb9466a2050d8b2b76469b72437589bb1963a74c9e3a74802657c30df954d72a
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_Timing_2.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_Timing_2.exe_
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_Timing_13.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_Timing_13.exe_
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
+
+Stalling_Timing_14.exe_
+    @{platlist}    get plat list    ${platlist}
+    : FOR    ${plat}    IN    @{platlist}
+    \    log    'plat is'=${plat}
+    \    ${REPORT_PATH}=    get report folder    ${resultbasefolder}    ${buildno}    ${plat}    Stalling_Timing_14.exe_
+    \    ...    ${sampleset}
+    \    analyze_stalling    ${REPORT_PATH}
