@@ -1,0 +1,46 @@
+# coding: utf-8
+
+import os
+
+env = Environment(
+    MSVC_VERSION="14.0"
+    , TARGET_ARCH="x86"
+    , CCFLAGS=["/GL", "/Gy", "/Oi", "/Oy-", "/MD", "/O2", "/GS-", "/nologo"]
+    , CXXFLAGS=["/EHsc"]
+    , CPPDEFINES=[
+        ("NDEBUG",)
+        , ("BOOST_PYTHON_STATIC_LIB", "1")
+        , ("BOOST_USE_WINAPI_VERSION", "0x0501")
+        , ("_WIN32_WINNT", "0x0501")
+        , ("WINVER", "0x0501")
+    ]
+    , LINKFLAGS=["/LTCG", "/INCREMENTAL:NO", "/OPT:REF", "/OPT:ICF", "/NOLOGO", '/SUBSYSTEM:CONSOLE",5.01"']
+    , CCPDBFLAGS="/Zi"
+    , CPPPATH=[
+        r"D:\Development\ThirdParty\Boost\Current"
+        , r"D:\Development\ThirdParty\DLib\Current"
+        , r"D:\Development\ThirdParty\STLSoft\Delta_1.10\include"
+        , r"D:\Development\ThirdParty\STLSoft\Current\include"
+        , r"D:\Development\ThirdParty\CImg\Current"
+    ]
+)
+
+common = []
+common += SConscript(
+    ["common/SConscript"]
+    , exports="env"
+)
+
+# Adding subscripts
+sub_scripts = []
+for subdir in os.listdir(os.curdir):
+    if os.path.isdir(subdir) and subdir.lower() != "common":
+        subscript = os.path.join(subdir, "SConscript")
+        if os.path.exists(subscript):
+            print "Adding subscript: %s" % (subscript,)
+            sub_scripts.append(subscript)
+
+SConscript(
+    sub_scripts
+    , exports="env common"
+)

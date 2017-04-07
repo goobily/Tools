@@ -1,0 +1,8 @@
+# coding: utf-8
+
+import os
+
+Import("env common")
+
+program_name = os.path.basename(os.path.abspath(Dir(".").srcnode().abspath))
+env.Program(program_name, Glob("*.c") + Glob("*.cpp"), LIBS=[common, "urlmon.lib", "shell32.lib"], PDB=program_name+".pdb")

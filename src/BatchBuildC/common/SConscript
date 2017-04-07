@@ -1,0 +1,13 @@
+# coding: utf-8
+
+Import("env")
+
+# Program and sources
+objects = env.Object(Glob("*.c") + Glob("*.cpp"))
+common = env.StaticLibrary("common", objects, ARFLAGS=["/nologo", "/LTCG"])
+
+# Prevent get cleaned by dependency
+if COMMAND_LINE_TARGETS and "common" not in COMMAND_LINE_TARGETS:
+    env.NoClean([common] + objects)
+
+Return("common")
