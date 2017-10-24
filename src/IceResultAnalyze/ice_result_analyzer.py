@@ -3,6 +3,7 @@ import sys
 import argparse
 import os
 from ice_parser import ICE_Parser
+from SCIvrLogParser import SCIvrLogParser
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) >= max(rel_tol * max(abs(a), abs(b)), abs_tol)
@@ -121,12 +122,23 @@ def get_evasion_info(result_all_folder):
     for root, dirs, files in os.walk(result_all_folder):
         for dir in dirs:
             dir_path = os.path.join(root, dir)
+            if not os.path.exists(dir_path):
+                print "result folder: %s not exist" % dir_path
+                continue
             num_total += 1
             name = ice_parser_ins.get_name(dir_path)
             if name is not None:
-                if len(ice_parser_ins.ivr_contained_rules_id(dir_path) & set(SC_EVASION_RULES)) != 0:
-                    print name
-                    num_evasion += 1
+                ivrv2_log_file = os.path.join(dir_path, "ivrV2.log")
+                if os.path.exists(ivrv2_log_file):
+                    ivr_log_parser = SCIvrLogParser(ivrv2_log_file)
+                    ivr_result = ivr_log_parser.get_result()
+                    rules = ivr_result['rule_set'] # type: set
+                    decision = ivr_result['decision']
+                    decision_type = ivr_result['decision_type']
+
+                    if len(rules & set(SC_EVASION_RULES)) != 0:
+                        print name, decision, decision_type
+                        num_evasion += 1
     print "\ntotal: [%d]" % num_total
     print "num_evasion: [%d/%d]" % (num_evasion, num_total)
 

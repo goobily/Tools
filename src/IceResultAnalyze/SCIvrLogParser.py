@@ -45,6 +45,7 @@ class SCIvrLogParser(object):
         m = re.match(r"Malicious score is (\d+). Decision is (\d+)\.", line)
         if m:
             self._data["score"] = m.group(1)
+            self._data["decision_type"] = "D{0}".format(m.group(2))
             state[0] = 3
 
     def _parse_static_info(self, line, state):
@@ -108,11 +109,16 @@ def main():
     ivr_file = sys.argv[1]
     p = SCIvrLogParser(ivr_file)
 
-    rules = p.get_result()['rule_set'] # type: set
+    result = p.get_result()
+    rules = result['rule_set'] # type: set
 
     for ruleid in rules:
         print ruleid
 
+    decision = result['decision']
+    decision_type = result['decision_type']
+
+    print decision, decision_type
 
 if __name__ == '__main__':
     main()
