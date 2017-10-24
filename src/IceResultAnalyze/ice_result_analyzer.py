@@ -106,10 +106,35 @@ def get_prefilter_info(result_all_folder):
     print "\nnum_pass_sps_prefilter: [%d/%d]" % (num_pass_sps_prefilter, num_all)
     print "num_pass_sps_prefilter_malicious: [%d/%d]" % (num_pass_sps_prefilter_malicious, num_all)
 
+SC_EVASION_RULES = ['1032', '2001', '2042', '2028', '3010', '3011', '3012', '3036', '3045', '3049',
+                    'a001', 'a002', 'a003', 'a004', 'a005', 'a006', 'a007', 'a008', 'a009', 'a00a',
+                    'a00b', 'a00c', 'a00d', 'a00f', 'a010', 'a011', 'a012', 'a013', 'a014', 'a015',
+                    'a016', 'a017', 'a018', 'a020', 'a021', 'a022', 'a023', 'a027', 'a028', 'a029',
+                    'a02a', 'a030', 'a031', 'a032', 'a033', 'a033', 'a034', 'a035', 'a036', 'a037',
+                    'a038', 'a039', 'a040', 'a041', 'a042', 'a043', 'a044', 'a045', 'a048', 'a049',
+                    'a050']
+
+def get_evasion_info(result_all_folder):
+    ice_parser_ins = ICE_Parser()
+    num_evasion = 0
+    num_total = 0
+    for root, dirs, files in os.walk(result_all_folder):
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            num_total += 1
+            name = ice_parser_ins.get_name(dir_path)
+            if name is not None:
+                if len(ice_parser_ins.ivr_contained_rules_id(dir_path) & set(SC_EVASION_RULES)) != 0:
+                    print name
+                    num_evasion += 1
+    print "\ntotal: [%d]" % num_total
+    print "num_evasion: [%d/%d]" % (num_evasion, num_total)
+
 data_info_callback = {
     'patch': get_ice_patched_info,
     'prefilter': get_prefilter_info,
-    'contribution': get_ice_rerun_behavior_contribution
+    'contribution': get_ice_rerun_behavior_contribution,
+    'evasion': get_evasion_info
 }
 
 def main():

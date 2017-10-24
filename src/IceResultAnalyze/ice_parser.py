@@ -3,7 +3,7 @@ import zipfile
 import json
 import re
 import shutil
-
+from SCIvrLogParser import SCIvrLogParser
 
 ICE_DYNAMIC_CHECKERS = ["IceCheckerLoop", "IceCheckerSmartRun", "IceCheckerSemanticFlow"]
 
@@ -147,6 +147,44 @@ class ICE_Parser(object):
                                 return True
         return False
 
+    def ivr_contained_rules_catalog(self,result_folder):
+        rules = {}
+        if not os.path.exists(result_folder):
+            print "result folder: %s not exist" % result_folder
+            return rules
+        ivrv2_log_file = os.path.join(result_folder, "ivrV2.log")
+
+        if os.path.exists(ivrv2_log_file):
+            with open(ivrv2_log_file, 'r') as f:
+                regex1 = re.compile(r"\[----(.*)----\]")
+                key = None
+                subnum = 0
+                for line in f:
+                    if line.strip() != "" :
+                        line=line.strip('\n')
+                        matchResult1 = regex1.match(line)
+                        if matchResult1:
+                           if key != None:
+                              rules[key] = subnum
+                           key = matchResult1.group(1).strip()
+                           subnum = 0
+                        else:
+                            subnum += 1
+                if key is not None:
+                    rules[key] = subnum
+                return rules
+        return rules
+
+    def ivr_contained_rules_id(self,result_folder):
+        rules = set()
+        if not os.path.exists(result_folder):
+            print "result folder: %s not exist" % result_folder
+            return rules
+        ivrv2_log_file = os.path.join(result_folder, "ivrV2.log")
+        if os.path.exists(ivrv2_log_file):
+            ivr_log_parser = SCIvrLogParser(ivrv2_log_file)
+            rules = ivr_log_parser.get_result()['rule_set']
+        return rules
 
     def behaviordumper_log_should_contain(self, result_folder, match_key):
         if not os.path.exists(result_folder):
